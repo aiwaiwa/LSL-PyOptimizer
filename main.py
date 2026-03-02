@@ -601,7 +601,7 @@ def main(argv):
                 script = sys.stdin.read()
             else:
                 try:
-                    f = open(fname, 'r')
+                    f = open(fname, 'rb')
                 except IOError as e:
                     if e.errno == 2:
                         werr(u"Error: File not found: %s\n" % str2u(fname))
@@ -778,13 +778,17 @@ def main(argv):
         del script_header, script_timestamp
 
         if bom:
-            if not script.startswith(b'\xEF\xBB\xBF'):
-                script = b'\xEF\xBB\xBF' + script
+            if python3:
+                if not script.startswith('\ufeff'):
+                    script = '\ufeff' + script
+            else:
+                if not script.startswith(b'\xEF\xBB\xBF'):
+                    script = b'\xEF\xBB\xBF' + script
 
         if outfile == '-':
             sys.stdout.write(script)
         else:
-            outf = open(outfile, 'w')
+            outf = open(outfile, 'w', encoding='utf-8') if python3 else open(outfile, 'wb')
             try:
                 outf.write(script)
             finally:

@@ -3064,7 +3064,7 @@ list lazy_list_set(list L, integer i, list v)
 
     def parsefile(self, filename, options = set(), lib = None):
         """Convenience function to parse a file rather than a string."""
-        f = open(filename, 'r')
+        f = open(filename, 'rb')
         try:
             script = f.read()
         finally:

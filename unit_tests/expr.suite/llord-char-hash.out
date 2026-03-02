@@ -11,7 +11,7 @@
 , 0
 , 0
 , 0
-, 64982
+, llOrd(JSON_TRUE, 0)
 , 65535
 , "%EF%BF%BD"
 , "%EF%BF%BD"

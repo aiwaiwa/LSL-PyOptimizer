@@ -154,10 +154,17 @@ class renamer(object):
             ReusableNames.add('g' + short)
         del functions
 
+        # Sort ReusableNames into a list for deterministic assignment order.
+        # set.pop() order varies across Python process invocations due to hash
+        # randomization, which makes the output non-deterministic. Using a
+        # sorted list ensures identical output for identical input.
+        ReusableList = sorted(ReusableNames)
+        del ReusableNames
+
         for name in globalvars:
             # First, check if we have reusable names available.
-            if ReusableNames:
-                short = ReusableNames.pop()
+            if ReusableList:
+                short = ReusableList.pop()
                 self.UsedNames.add(short)
             else:
                 short = self.GetNextShortest()
@@ -166,11 +173,12 @@ class renamer(object):
         # Do the same for function and event parameter names. Pure locals get
         # long distinct names.
         if UsableAsParams is not None:
-            ReusableNames |= UsableAsParams
+            # Rebuild as a sorted list including the new names.
+            ReusableList = sorted(set(ReusableList) | UsableAsParams)
         First = True
         restart = self.WordFirstChar
-        restartReusable = ReusableNames
-        ReusableNames = restartReusable.copy()
+        restartReusable = ReusableList
+        ReusableList = restartReusable[:]
         restartState = stateNames;
         stateNames = restartState[:]
         restartUsed = self.UsedNames;
@@ -193,12 +201,12 @@ class renamer(object):
                         # Parameter tables are isolated from each other.
                         InParams = True
                         self.WordFirstChar = restart
-                        ReusableNames = restartReusable.copy()
+                        ReusableList = restartReusable[:]
                         stateNames = restartState[:]
                         self.UsedNames = restartUsed.copy()
                     # Same procedure as for global vars
-                    if ReusableNames:
-                        short = ReusableNames.pop()
+                    if ReusableList:
+                        short = ReusableList.pop()
                         self.UsedNames.add(short)
                     elif stateNames:
                         short = stateNames.pop()

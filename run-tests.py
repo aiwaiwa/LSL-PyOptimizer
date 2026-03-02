@@ -189,9 +189,11 @@ def parseArgs(s):
 def tryRead(fn, Binary = False):
     result = None
     try:
-        f = open(fn, 'rb' if Binary else 'r')
+        f = open(fn, 'rb')
         try:
             result = f.read()
+            if not Binary:
+                result = result.decode('utf-8')
         finally:
             f.close()
     except IOError as e:
