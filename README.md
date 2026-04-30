@@ -1,5 +1,7 @@
 # LSL PyOptimizer
 
+> This repository is a fork of [Sei-Lisa/LSL-PyOptimizer](https://github.com/Sei-Lisa/LSL-PyOptimizer), licensed under GPLv3. Local modifications: Unicode/encoding fixes, deterministic renaming, and binary read modes — see the git history for details.
+
 **LSL PyOptimizer** is a LSL2 script optimizer written in Python 2. Currently it only supports code memory optimization (no speed optimization), only for Mono (no LSO or Luau), and only for the Second Life flavour of LSL (no OpenSim etc.).
 
 > :warning: WARNING: \
